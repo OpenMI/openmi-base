@@ -1,0 +1,8 @@
+# Compile
+*_test
+a.out 
+bin/
+build/ 
+lib/
+.sconsign.dblite
+*.o
