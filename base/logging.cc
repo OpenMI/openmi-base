@@ -185,11 +185,11 @@ void LogMessage::Flush() {
           LogDestination* log_dest = LogDestination::log_destination(index);
           assert(log_dest != nullptr);
           log_dest->Write(data_->message_text_, data_->num_chars_to_log_);
+          log_dest->Flush();
         }
       }
     
       if (g_log_dir.empty() || (!g_log_dir.empty() && g_alsologtostderr)) {
-        //WriteToStderr(data_->message_text_, data_->num_chars_to_log_);
         send_method_(data_->message_text_, data_->num_chars_to_log_, INFO);
       }
     }

@@ -41,3 +41,4 @@ add_library(${libname}_static STATIC ${srcs})
 target_link_libraries(${libname}_static ${summary_linker_flags})
 set_target_properties(${libname}_static PROPERTIES OUTPUT_NAME ${libname})
 
+add_subdirectory(base/test)

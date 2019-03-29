@@ -72,12 +72,15 @@ void custom_send_method(char** argv) {
   ShutdownLogging();
 }
 
+void check_binary_op() {
+  CHECK_EQ(1, 2) << "1 != 2";
+} 
+
 int main(int argc, char** argv) {
-  /*
-  default_logging();
-  init_logging(argv);
-  multi_thread_logging(argv);
-  */
-  custom_send_method(argv);
+  //default_logging();
+  //init_logging(argv);
+  //multi_thread_logging(argv);
+  //custom_send_method(argv); 
+  check_binary_op();
   return 0;
 }

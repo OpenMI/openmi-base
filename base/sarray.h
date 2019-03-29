@@ -11,6 +11,9 @@
 #include <vector>
 #include <memory>
 #include <sstream>
+#include "base/logging.h"
+
+using namespace openmi;
 
 namespace openmi {
 

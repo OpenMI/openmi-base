@@ -1,5 +1,5 @@
-#ifndef OPENMI_TOOLS_REGISTER_H_
-#define OPENMI_TOOLS_REGISTER_H_ 
+#ifndef OPENMI_BASE_REGISTER_H_
+#define OPENMI_BASE_REGISTER_H_ 
 
 #include <iostream>
 #include <map>
@@ -37,7 +37,7 @@ public:
       for (std::string name: ListAllNames()) {
         names += name + ",";
       }
-      LOG(ERROR) << name << " in func_mapper_ not exists. stored names: [" << names << "]";
+      LOG(ERROR) << name << " in register not exists. registered names: [" << names << "]";
       return NULL;
     }
   }
@@ -93,6 +93,9 @@ private:
   std::map<std::string, T*> func_mapper_;
 }; // class Register 
 
+/*!
+ * A abstraction class used for registry
+ */
 template<typename T, typename FunctionType>
 class FunctionRegisterBase {
 public:
@@ -125,10 +128,10 @@ public:
 // This macro must be used under namespace openmi, and only used once in cc file. 
 #define OPENMI_REGISTER_ENABLE(Type)            \
   template<>                                    \
-    Register<Type>* Register<Type>::Get() {     \
-      static Register<Type> inst;               \
-      return &inst;                             \
-    }                                           \
+  Register<Type>* Register<Type>::Get() {       \
+    static Register<Type> inst;                 \
+    return &inst;                               \
+  }                                             \
 /*
 #define OPENMI_REGISTER_OBJECT(Type, TypeName, Name)        \
   static Type & __make_ ## TypeName ## _ ## Name ## __ =    \
@@ -165,4 +168,4 @@ public:
     __openmi_register_file_tag_ ## UniqueTag ## __();
 
 } // namespace openmi 
-#endif // OPENMI_TOOLS_REGISTER_H_
+#endif // OPENMI_BASE_REGISTER_H_

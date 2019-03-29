@@ -12,7 +12,6 @@
 #include <string>
 
 namespace openmi {
-namespace tools {
 /*!
  * \brief convert string to real type. for example:
  *  std::string str = "12345678";
@@ -35,6 +34,5 @@ std::string NumToString(const T& value) {
   return std::string(buffer.str());
 }
 
-} // namespace tools
 } // namespace openmi
 #endif // OPENMI_BASE_TYPE_CONVERSION_H_

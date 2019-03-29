@@ -4,6 +4,8 @@
 #include <limits> // numeric_limits 
 #include <stdint.h>
 #include <string>
+#include "base/logging.h"
+using namespace openmi;
 
 namespace openmi {
 /*!
@@ -19,12 +21,19 @@ public:
   virtual std::string Name() = 0;
 
   virtual void* AllocateRaw(size_t alignment, size_t num_bytes) = 0;
+  
+  virtual void* AllocateRaw(size_t num_bytes) {
+    return static_cast<void*>(new char[num_bytes]);
+  }
 
-  virtual void DeallocateRaw(void* ptr) = 0;
+  virtual void DeallocateRaw(void* ptr) {
+    delete[] static_cast<char*>(ptr);
+  }
 
   template<typename T>
   T* Allocate(size_t num_elements) {
     if (num_elements > (std::numeric_limits<size_t>::max() / sizeof(T))) {
+      LOG(ERROR) << "Unable to allocate memory because the demand is too large. num_elements:" << num_elements;
       return nullptr;
     }
 

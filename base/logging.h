@@ -216,6 +216,7 @@ public:
 #define LOG_DEBUG openmi::LogMessage(__FILE__, __LINE__, DEBUG)
 #define LOG_INFO openmi::LogMessage(__FILE__, __LINE__, INFO)
 #define LOG_WARN openmi::LogMessage(__FILE__, __LINE__, WARN)
+#define LOG_WARNING LOG_WARN
 #define LOG_ERROR openmi::LogMessage(__FILE__, __LINE__, ERROR)
 #define LOG_FATAL openmi::LogMessageFatal(__FILE__, __LINE__, FATAL)
 #define LOG_QFATAL LOG_FATAL 
@@ -236,13 +237,13 @@ public:
 
 #define DEFINE_CHECK_FUNC(name, op)                                   \
   template <typename T1, typename T2>                                 \
-  inline LogCheckError LogCheck##name(const T1& c1, const T2& c2) {   \
-    if (c1 op c2) {                                                   \
+  inline LogCheckError LogCheck##name(const T1& t1, const T2& t2) {   \
+    if (t1 op t2) {                                                   \
       return LogCheckError();                                         \
     }                                                                 \
     std::ostringstream os;                                            \
-    /* c1 and c2 can be serialized to string */                       \
-    os << " (" << c1 << " vs. " << c2 << ") ";                        \
+    /* t1 and t2 can be serialized to string */                       \
+    os << " (" << t1 << " vs. " << t2 << ") ";                        \
     return LogCheckError(os.str());                                   \
   }                                                                   \
   inline LogCheckError LogCheck##name(int x, int y) {                 \
@@ -250,9 +251,8 @@ public:
   } 
 
 #define CHECK_BINARY_OP(name, op, c1, c2)  \
-  if (openmi::LogCheckError check_err = openmi::LogCheck##name(c1, c2)) { \
-    openmi::LogMessageFatal(__FILE__, __LINE__).Stream() << "check failed: " << #c1 " " #op " " #c2 << *(check_err.str);  \
-  }
+  if (openmi::LogCheckError check_err = openmi::LogCheck##name(c1, c2)) \
+    openmi::LogMessageFatal(__FILE__, __LINE__).Stream() << " Check failed: " << #c1 " " #op " " #c2 << *(check_err.str)
 
 DEFINE_CHECK_FUNC(_LT, <);
 DEFINE_CHECK_FUNC(_LE, <=);
@@ -263,7 +263,7 @@ DEFINE_CHECK_FUNC(_NE, !=);
 
 #define CHECK(x)  \
   if (!(x)) \
-    openmi::LogMessageFatal(__FILE__, __LINE__).Stream() << "check failed: " #x << ' '
+    openmi::LogMessageFatal(__FILE__, __LINE__).Stream() << " Check failed: " #x << ' '
 
 #define CHECK_LT(c1, c2) CHECK_BINARY_OP(_LT, <, c1, c2)
 #define CHECK_LE(c1, c2) CHECK_BINARY_OP(_LE, <=, c1, c2)
@@ -273,7 +273,7 @@ DEFINE_CHECK_FUNC(_NE, !=);
 #define CHECK_NE(c1, c2) CHECK_BINARY_OP(_NE, !=, c1, c2) 
 
 #define CHECK_NOTNULL(x)  \
-  ((x) == NULL ? openmi::LogMessageFatal(__FILE__, __LINE__).Stream() << "check notnull: " #x << ' ', (x) : (x))
+  ((x) == NULL ? openmi::LogMessageFatal(__FILE__, __LINE__).Stream() << " Check notnull: " #x << ' ', (x) : (x))
 
 // non NDEBUG mode
 #define DCHECK(x) CHECK(x)
