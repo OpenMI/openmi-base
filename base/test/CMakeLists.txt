@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.4) 
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/base/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 function (add_program arg)
   list(LENGTH ARGV  argv_len)
@@ -16,6 +16,5 @@ endfunction()
 
 add_program("allocator_test")
 add_program("logging_test")
-add_program("register_test")
 add_program("sarray_test")
 add_program("timer_test")

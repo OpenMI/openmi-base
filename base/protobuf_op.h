@@ -14,6 +14,7 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include "base/logging.h"
 
+using namespace std;
 using namespace openmi;
 
 namespace openmi {
@@ -75,7 +76,7 @@ public:
    */
   template <typename PbType>
   static int ParseFromString(const std::string& serialized_buffer, PbType* obj) {
-    if (! obj->ParseFromString(serailized_buffer)) {
+    if (! obj->ParseFromString(serialized_buffer)) {
       LOG(ERROR) << "parse from serialized string failed."; 
       return -1;
     }
@@ -85,7 +86,7 @@ public:
   template <typename PbType>
   static int SerializeToOstream(const char* file_path, PbType* obj) {
     fstream ofs(file_path, ios::out|ios::trunc|ios::binary);
-    bool result = obj->SerailizeToOstream(&ofs);
+    bool result = obj->SerializeToOstream(&ofs);
     ofs.close();
     ofs.clear();
     if (result) {
