@@ -22,6 +22,10 @@ bool Read::get_line(std::string& line) {
 
 // MMap
 bool MMap::load(const char* path) {
+  if (path == nullptr || *path == '\0') {
+    ::err(errno, "path is empty");
+    return false;
+  }
   int fd = ::open(path, O_RDONLY);
   if (fd < 0) {
     ::err(errno, "MMap open failed. file: %s", path);
