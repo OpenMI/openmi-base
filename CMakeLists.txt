@@ -4,6 +4,8 @@ project(openmi-base)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 
+#SET(CMAKE_BUILD_TYPE "Release")
+
 set(BASIC_CXXFLAGS "-std=c++11 -g -Wall")
 set(PIC_FLAGS "-fPIC")
 set(BASIC_CPPDEFINES "-DNDEBUG")
@@ -31,6 +33,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib) 
 
 aux_source_directory(base srcs_base)
+#aux_source_directory(base_logging srcs_base)
 set(srcs ${srcs_base})
 
 set(libname openmi_base)

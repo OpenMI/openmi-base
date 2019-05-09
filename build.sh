@@ -6,7 +6,7 @@ set -o errexit
 SCRIPT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 PROJECT_DIR=$SCRIPT_DIR
 
-deps_base_path=$HOME/.openmit_deps
+deps_base_path=$HOME/.openmi_deps
 
 while getopts "c:" opt; do
   case "$opt" in 

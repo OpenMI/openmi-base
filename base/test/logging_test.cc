@@ -14,6 +14,8 @@ void default_logging() {
   LOG(INFO) << msg;
   LOG(WARN) << msg;
   LOG(ERROR) << msg;
+  DLOG(INFO) << "DLOG ";
+  //<< msg;
 }
 
 void init_logging(char** argv) {
@@ -77,10 +79,10 @@ void check_binary_op() {
 } 
 
 int main(int argc, char** argv) {
-  //default_logging();
+  default_logging();
   //init_logging(argv);
   //multi_thread_logging(argv);
   //custom_send_method(argv); 
-  check_binary_op();
+  //check_binary_op();
   return 0;
 }

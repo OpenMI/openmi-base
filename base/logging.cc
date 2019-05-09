@@ -6,6 +6,7 @@
 #include <string.h>     // strrchr
 #include <sys/time.h>   // gettimeofday  
 #include <unistd.h>     // access
+#include <string>
 
 using namespace openmi::internal;
 
@@ -131,11 +132,13 @@ void LogMessage::SetSendMethod(SendMethod send_method) {
   send_method_ = send_method;
 }
 
-LogMessage::LogMessage(const char* file, int line): log_severity_(INFO) {
+LogMessage::LogMessage(const char* file, int line) 
+: allocated_(nullptr), data_(nullptr), log_severity_(INFO) {
   Init(file, line, log_severity_);
 }
 
-LogMessage::LogMessage(const char* file, int line, LogSeverity severity): log_severity_(severity) {
+LogMessage::LogMessage(const char* file, int line, LogSeverity severity)
+: allocated_(nullptr), data_(nullptr), log_severity_(severity) {
   Init(file, line, severity);
 }
 
@@ -144,12 +147,18 @@ LogMessage::~LogMessage() {
   delete allocated_;
 }
 
-std::ostream& LogMessage::Stream() { 
+std::ostream& LogMessage::Stream() {
+  if (data_ == nullptr) {
+    std::string err_msg("data_ is nullptr. It maybe LogMessage::Init has not been execuated. ");
+    std::string func(__func__);
+    std::string file(__FILE__);
+    err_msg += "func: " + func + ", file: " + file + ", line: " + std::to_string(__LINE__);
+    throw std::runtime_error(err_msg);
+  };
   return data_->stream_; 
 } 
 
 void LogMessage::Init(const char* file, int line, LogSeverity severity) {
-  allocated_ = NULL;
   allocated_ = new LogMessageData();
   data_ = allocated_;
   

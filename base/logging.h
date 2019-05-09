@@ -181,6 +181,17 @@ private:
   void operator=(const LogMessage&);
 }; // class LogMessage
 
+class NullStream : public LogMessage::LogStream {
+public:
+  NullStream() : LogMessage::LogStream(message_buffer_, 0) {}
+  NullStream& Stream() { return *this; }
+private:
+  char message_buffer_[2];
+}; // class NullStream
+
+template <class T>
+inline NullStream& operator<<(NullStream& str, const T& t) { return str; }
+
 // support stack trace
 class LogMessageFatal: public LogMessage {
 public:
@@ -211,6 +222,14 @@ public:
   std::string* str;
 }; // class LogCheckError 
 
+class LogMessageVoidify {
+public:
+  LogMessageVoidify() { }
+  // This has to be an operator with a precedence lower than << but
+  // higher than ?:
+  void operator&(std::ostream&) { }
+}; // class LogMessageVoidify
+
 // LOG by severity
 #define LOG_TRACE openmi::LogMessage(__FILE__, __LINE__, TRACE)
 #define LOG_DEBUG openmi::LogMessage(__FILE__, __LINE__, DEBUG)
@@ -223,7 +242,19 @@ public:
 
 #define LOG(severity) LOG_##severity.Stream() << ' ' 
 #define VLOG(x) LOG_INFO.Stream() << ' '
-#define DLOG(severity) LOG_DEBUG.Stream() << ' '
+
+#if defined(NDEBUG)
+#define DCHECK_IS_ON() 0
+#else
+#define DCHECK_IS_ON() 1
+#endif 
+
+#if DCHECK_IS_ON()
+#define DLOG(severity) LOG(severity)
+#else
+#define DLOG(severity) true ? (void) 0 : LogMessageVoidify() & LOG(severity)
+#endif
+
 
 #define SIMPLE_TRACE T
 #define SIMPLE_DEBUG D
