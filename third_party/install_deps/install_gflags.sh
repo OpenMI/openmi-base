@@ -22,7 +22,7 @@ function install_gflags() {
   git clone $url
   mkdir -p gflags/build_gflags || echo "build_gflags exists"
   cd gflags/build_gflags  
-  install_dir=$THIRD_PARTY_DIR/deps/gflags 
+  install_dir=$deps_base_path
   mkdir -p $install_dir || echo "$install_dir exists"
   export CXXFLAGS="-g -O3 -fPIC" && cmake .. -DCMAKE_INSTALL_PREFIX=$install_dir && make VERBOSE=1 -j8 && make install 
 

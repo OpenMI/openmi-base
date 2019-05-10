@@ -27,22 +27,24 @@ void Status::SlowCopyFrom(const State* s) {
   }
 }
 
+#define NAME(code) #code
+
 std::string error_name(Code code) {
   switch (code) {
     case openmi::OK:
-      return "OK"; 
+      return NAME(OK); 
       break;
     case openmi::INVALID_ARGUMENT:
-      return "Invalid argument"; 
+      return NAME(INVALID_ARGUMENT);
       break;
     case openmi::NOT_FOUND:
-      return "Not found"; 
+      return NAME(NOT_FOUND);
       break;
     case openmi::OUT_OF_RANGE:
-      return "Out of range"; 
+      return NAME(OUT_OF_RANGE);
       break;
     case openmi::UNKNOWN:
-      return "Unknown"; 
+      return NAME(UNKNOWN);
       break;
       // TODO 
     default:
@@ -52,7 +54,6 @@ std::string error_name(Code code) {
       break;
   }
 }
-
 std::string Status::ToString() const {
   if (state_ == nullptr) {
     return "OK";
