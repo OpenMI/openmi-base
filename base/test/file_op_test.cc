@@ -5,7 +5,7 @@ using namespace openmi;
 
 
 int main(int argc, char** argv) {
-  std::string path("openmit");
+  std::string path("openmi");
   std::string cmd = "rm -rf " + path + " || true";
   printf("cmd:%s\n", cmd.c_str());
   int rt = system(cmd.c_str());
