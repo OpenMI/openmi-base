@@ -2,6 +2,14 @@
 
 basic, common components for openmi 
 
+# 安装第三方依赖
+
+默认安装在`~/.openmi_deps`目录下，配置`third_party/deps_env.conf`
+
+```sh
+cd third_party 
+./install_deps.sh
+```
 
 # 安装与编译 
 
