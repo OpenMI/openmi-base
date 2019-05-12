@@ -1,5 +1,6 @@
 #!/bin/bash 
 
+set -x
 set -o pipefail
 set -o errexit
 
@@ -12,4 +13,6 @@ if [ -d build ]; then
   cd ..
 fi
 
-rm -rf lib bin build || echo "done"
+rm -rf lib bin build log || true 
+
+echo "clear_build done"

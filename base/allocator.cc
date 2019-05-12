@@ -44,4 +44,6 @@ Allocator* cpu_allocator(std::string cpu_alloc_name) {
   return openmi::Register<openmi::AllocatorRegistry>::Find(cpu_alloc_name)->func();
 }
 
+//OPENMI_REGISTER_FILE_TAG(cpu_allocator);
+
 } // namespace openmi

@@ -4,5 +4,8 @@ a.out
 bin/
 build/ 
 lib/
+log/
+nohup.out
 .sconsign.dblite
 *.o
+third_party/third_party/

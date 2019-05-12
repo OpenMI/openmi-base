@@ -9,11 +9,12 @@ namespace openmi {
 
 /*!
  * thread local class using pthread_key_t
- * NOTE: not singleton class
  */
 template <typename T>
 class ThreadLocal {
 public:
+  typedef ThreadLocal<T>* pThreadLocal;
+
   ThreadLocal() {
     if (pthread_key_create(&key_, &ThreadLocal::Destructor) != 0) {
       std::runtime_error("pthread_key_t variable create failed");
@@ -27,13 +28,13 @@ public:
   }
 
   T& Value() {
-    T* value = static_cast<T*>(pthread_getspecific(key_));
-    if (!value) {
-      T* t = new T();
-      if (pthread_setspecific(key_, t) != 0) {
+    T* value = reinterpret_cast<T*>(pthread_getspecific(key_));
+    if (value == nullptr) {
+      T* obj = new T();
+      if (pthread_setspecific(key_, reinterpret_cast<void*>(obj)) != 0) {
         std::runtime_error("pthread_key_t variable set failed");
       }
-      value = t;
+      value = obj;
     } else {
       std::runtime_error("pthread_key_t variable get failed.");
     }
@@ -42,7 +43,7 @@ public:
 
 private:
   static void Destructor(void* v) {
-    T* t = static_cast<T*>(v);
+    T* t = reinterpret_cast<T*>(v);
     typedef char complete_type[sizeof(T) == 0 ? -1 : 1];
     complete_type dummy_variable;
     (void) dummy_variable;

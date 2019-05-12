@@ -5,7 +5,7 @@
 using namespace openmi;
 
 static int N = 10;
-static int NN = 10000;
+static int NN = 10000*10000;
 
 const char* msg = "openmi logging";
 
@@ -14,17 +14,16 @@ void default_logging() {
   LOG(INFO) << msg;
   LOG(WARN) << msg;
   LOG(ERROR) << msg;
-  DLOG(INFO) << "DLOG ";
-  //<< msg;
+  DLOG(INFO) << "DLOG " << msg;
 }
 
 void init_logging(char** argv) {
   InitLogging(argv);
-  g_log_dir = "test_logging";
+  g_log_dir = "log";
   g_alsologtostderr = true;
-  LOG(INFO) << msg;
-  LOG(WARN) << msg;
-  LOG(ERROR) << msg;
+  LOG(INFO) << msg << " init";
+  LOG(WARN) << msg << " init";
+  LOG(ERROR) << msg << " init";
   ShutdownLogging();
 }
 
@@ -40,15 +39,19 @@ void multi_thread_logging(char** argv) {
   openmi::Timer timer;
   
   InitLogging(argv);
-  g_log_dir = "test_logging";
+  g_log_dir = "log";
   g_alsologtostderr = false;
 
   std::thread t1(logging_bench);
   std::thread t2(logging_bench);
   std::thread t3(logging_bench);
+  std::thread t4(logging_bench);
+  std::thread t5(logging_bench);
   t1.join();
   t2.join();
   t3.join();
+  t4.join();
+  t5.join();
 
   ShutdownLogging();
   int end_time = timer.Elapsed();
@@ -64,7 +67,7 @@ void send_method(const char* msg, size_t size, LogSeverity severity) {
 
 void custom_send_method(char** argv) {
   InitLogging(argv);
-  const char* base_dirname = "test_logging";
+  const char* base_dirname = "log";
   const char* bin_name = "logging_test";
   internal::LogFile log_file(base_dirname, bin_name, 1024*1024*1024);
   g_logfile = &log_file;
@@ -81,7 +84,7 @@ void check_binary_op() {
 int main(int argc, char** argv) {
   default_logging();
   //init_logging(argv);
-  //multi_thread_logging(argv);
+  multi_thread_logging(argv);
   //custom_send_method(argv); 
   //check_binary_op();
   return 0;

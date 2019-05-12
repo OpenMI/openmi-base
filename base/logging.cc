@@ -12,6 +12,7 @@ using namespace openmi::internal;
 
 namespace openmi {
 
+ThreadLocal<internal::DateInfo>::pThreadLocal g_date = new ThreadLocal<internal::DateInfo>();
 std::string g_log_dir = "";
 char* g_program_name = nullptr;
 char* g_log_destination_file_name = nullptr;
@@ -57,8 +58,10 @@ LogDestination* LogDestination::log_destination(int log_file_index, off_t roll_s
 
 void LogDestination::DeleteLogDestinations() {
   for (int i = 0; i < LOG_FILE_SEVERITIES; ++i) {
-    delete log_destinations_[i];
-    log_destinations_[i] = NULL;
+    if (log_destinations_[i] != nullptr) {
+      delete log_destinations_[i];
+      log_destinations_[i] = nullptr;
+    }
   }
 }
 
@@ -144,7 +147,10 @@ LogMessage::LogMessage(const char* file, int line, LogSeverity severity)
 
 LogMessage::~LogMessage() {
   Flush();
-  delete allocated_;
+  if (allocated_ != nullptr) {
+    delete allocated_;
+    allocated_ = nullptr;
+  }
 }
 
 std::ostream& LogMessage::Stream() {
@@ -168,7 +174,7 @@ void LogMessage::Init(const char* file, int line, LogSeverity severity) {
   data_->first_fatal_ = false;
 
   Stream() << severity_tags[data_->log_severity_];
-  LogPrettyDate(g_date.Value(), Stream()) 
+  LogPrettyDate(g_date->Value(), Stream()) 
     << ' ' << SystemInfo::GetTID() << ' ' << data_->basename_ << ':' << line << "]";
 }
 
@@ -406,7 +412,7 @@ LogFile::LogFile(const char* base_filename,
     first_link_ = true;
 
     if (!access_dir(base_filename_.c_str())) {
-      printf("[WARNING] dir %s not exist. mkdir it.\n", base_filename_.c_str());
+      printf("directory '%s' not exist. mkdir it.\n", base_filename_.c_str());
       if (!mk_dir(base_filename_.c_str())) {
         std::runtime_error("mkdir failed");
       }
@@ -475,14 +481,14 @@ bool LogFile::RollFile() {
     last_roll_ = now;
     last_flush_ = now;
     start_of_period_ = start;
-    printf("RollFile file_.reset. cur_log_filename: %s\n", cur_log_filename.c_str());
+    printf("roll file reset. current log file name: %s\n", cur_log_filename.c_str());
 
     std::string cur_log_fullname = base_filename_ + "/" + cur_log_filename;
     file_.reset(new WriteOp(cur_log_fullname.c_str(), false, true)); 
 
     // file head info 
     char line[41];
-    internal::DateInfo d = g_date.Value();
+    internal::DateInfo d = g_date->Value();
     internal::Date::HumanDate(d);
     snprintf(line, sizeof(line), 
              "Log file created at: %04d/%02d/%02d %02d:%02d:%02d", 
@@ -598,6 +604,9 @@ void InitLogging(char** argv) {
 
 void ShutdownLogging() {
   LogDestination::DeleteLogDestinations();
+  if (g_date != nullptr) {
+    delete g_date; g_date = nullptr;
+  }
 }
 
 } // namespace openmi

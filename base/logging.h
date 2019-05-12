@@ -13,6 +13,7 @@
 #include <sys/types.h>  // off_t, opendir, mkdir
 #include <thread>
 #include "thread_local.h"
+using namespace openmi;
 
 namespace openmi {
 
@@ -25,7 +26,8 @@ namespace internal {
 extern void InitLogging(char** argv);
 extern void ShutdownLogging();
 
-static openmi::ThreadLocal<internal::DateInfo> g_date;
+//static openmi::ThreadLocal<internal::DateInfo> g_date;
+extern ThreadLocal<internal::DateInfo>::pThreadLocal g_date;
 extern std::string g_log_dir;
 extern char* g_program_name;
 extern char* g_log_destination_file_name;     // g_log_dir/g_program_name
