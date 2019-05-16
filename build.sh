@@ -8,9 +8,9 @@ PROJECT_DIR=$SCRIPT_DIR
 
 deps_base_path=$HOME/.openmi_deps
 
-while getopts "c:" opt; do
+while getopts "b:" opt; do
   case "$opt" in 
-    c) deps_base_path=$OPTARG;;
+    b) deps_base_path=$OPTARG;;
     \?) echo "Invalid option: -$OPTARG";;
   esac
 done 

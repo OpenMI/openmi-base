@@ -6,7 +6,7 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 #SET(CMAKE_BUILD_TYPE "Release")
 
-set(BASIC_CXXFLAGS "-std=c++11 -g -Wall")
+set(BASIC_CXXFLAGS "-std=c++11 -g -Wall -pthread")
 set(PIC_FLAGS "-fPIC")
 #set(BASIC_CPPDEFINES "-DNDEBUG")
 

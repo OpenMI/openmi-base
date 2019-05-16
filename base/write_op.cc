@@ -1,4 +1,5 @@
 #include "write_op.h"
+#include <string.h>   // strlen
 
 namespace openmi {
 

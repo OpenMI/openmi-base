@@ -19,7 +19,14 @@ gcc版本至少支持c++11
 
 + 编译
 
-进入`openmi-base`目录，执行`./build.sh`，如果成功，会生成一个lib目录，存放base的static和dynamic文件。
+```sh
+cd openmi-base
+./build.sh [-b ${HOME}/.openmi_deps]
+```
+
+> `-b ${HOME}/.openmi_deps`默认第三方依赖路径
+
+如果成功，会生成一个lib目录，存放base的static和dynamic文件。
 
 + 清除编译结果
 
