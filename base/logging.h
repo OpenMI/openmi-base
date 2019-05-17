@@ -239,7 +239,7 @@ public:
 #define LOG_WARN openmi::LogMessage(__FILE__, __LINE__, WARN)
 #define LOG_WARNING LOG_WARN
 #define LOG_ERROR openmi::LogMessage(__FILE__, __LINE__, ERROR)
-#define LOG_FATAL openmi::LogMessageFatal(__FILE__, __LINE__, FATAL)
+#define LOG_FATAL openmi::LogMessageFatal(__FILE__, __LINE__)
 #define LOG_QFATAL LOG_FATAL 
 
 #define LOG(severity) LOG_##severity.Stream() << ' ' 
