@@ -43,7 +43,7 @@ static bool mk_dir(const char* path) {
 };
 
 
-const size_t LogMessage::kMaxLogMessageLen = 30000;
+const size_t LogMessage::kMaxLogMessageLen = 1024*256;
 static std::mutex mutex; 
 
 LogDestination* LogDestination::log_destinations_[LOG_FILE_SEVERITIES];
