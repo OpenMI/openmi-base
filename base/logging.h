@@ -445,6 +445,5 @@ private:
 }; // class LogFile
 
 } // namespace internal
-
 } // namespace openmi
 #endif // OPENMI_BASE_LOGGING_H_

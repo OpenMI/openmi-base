@@ -213,6 +213,16 @@ void LogMessage::Flush() {
   if (append_newline) {
     data_->message_text_[data_->num_chars_to_log_ - 1] = original_final_char;
   }
+
+  if (data_->num_chars_to_log_ > kMaxLogMessageLen - 10) {
+    internal::DateInfo d = g_date->Value();
+    internal::Date::HumanDate(d);
+    char line[100];
+    snprintf(line, sizeof(line), 
+             "......\nW%02d%02d %02d:%02d:%02d WARNING (%s:%d) data exceed out buffer range.\n", 
+             d.month, d.day, d.hour, d.minute, d.second, ConstShortFileName(__FILE__), __LINE__);
+    send_method_(line, strlen(line), log_severity_);
+  }
 }
 
 // LogMessageFatal
