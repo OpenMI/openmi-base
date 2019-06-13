@@ -19,7 +19,7 @@ void default_logging() {
 }
 
 void init_logging(char** argv) {
-  InitLogging(argv);
+  InitLogging(argv[0]);
   g_log_dir = "log";
   g_alsologtostderr = true;
   LOG(INFO) << msg << " init";
@@ -39,7 +39,7 @@ void logging_bench() {
 void multi_thread_logging(char** argv) {
   openmi::Timer timer;
   
-  InitLogging(argv);
+  InitLogging(argv[0]);
   g_log_dir = "log";
   g_alsologtostderr = false;
 
@@ -67,7 +67,7 @@ void send_method(const char* msg, size_t size, LogSeverity severity) {
 }
 
 void custom_send_method(char** argv) {
-  InitLogging(argv);
+  InitLogging(argv[0]);
   const char* base_dirname = "log";
   const char* bin_name = "logging_test";
   internal::LogFile log_file(base_dirname, bin_name, 1024*1024*1024);

@@ -21,6 +21,8 @@ bool g_alsologtostderr = false;
 bool g_async = false;
 int g_log_severity = INFO;
 
+static const char* g_program_invocation_short_name = NULL;
+
 const char* log_severity_names[NUM_SEVERITIES] = {"TRACE","DEBUG","INFO","WARN","ERROR","FATAL"};
 const char severity_tags[NUM_SEVERITIES] = {'T','D','I','W','E','F'}; 
 
@@ -606,10 +608,16 @@ bool WriteOp::write_binary(const char* content, size_t size) {
 
 } // namespace internal
 
-void InitLogging(char** argv) {
+void InitLogging(const char* argv0) {
+  CHECK(g_program_invocation_short_name == NULL) << ". You called InitLogging twice!";
   // only unix-like os
-  char* program = strrchr(argv[0], '/'); 
-  g_program_name = const_cast<char*>(program ? program + 1 : argv[0]);
+  if (argv0 != nullptr) {
+    char* program = strrchr(argv0, '/'); 
+    g_program_name = const_cast<char*>(program ? program + 1 : argv0);
+  } else {
+    g_program_name = const_cast<char*>("logging");
+  }
+  g_program_invocation_short_name = g_program_name;
 }
 
 void ShutdownLogging() {

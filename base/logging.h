@@ -23,7 +23,7 @@ namespace internal {
   class LogFile;
 }
 
-extern void InitLogging(char** argv);
+extern void InitLogging(const char* name);
 extern void ShutdownLogging();
 
 //static openmi::ThreadLocal<internal::DateInfo> g_date;
