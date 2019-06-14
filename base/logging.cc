@@ -612,7 +612,7 @@ void InitLogging(const char* argv0) {
   CHECK(g_program_invocation_short_name == NULL) << ". You called InitLogging twice!";
   // only unix-like os
   if (argv0 != nullptr) {
-    char* program = strrchr(argv0, '/'); 
+    char* program = strrchr(const_cast<char*>(argv0), '/'); 
     g_program_name = const_cast<char*>(program ? program + 1 : argv0);
   } else {
     g_program_name = const_cast<char*>("logging");
