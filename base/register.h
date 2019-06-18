@@ -54,7 +54,7 @@ public:
   }
 
   inline T& __REGISTER__(const std::string& name) {
-    printf("__REGISTER__ name: %s\n", name.c_str());
+    printf("__REGISTER__ class|func: %s\n", name.c_str());
     if (func_mapper_.count(name) != 0U) {
       std::runtime_error(name + " already registered");
     }
