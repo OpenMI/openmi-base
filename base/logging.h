@@ -360,12 +360,12 @@ public:
   
   std::string OsName();
   std::string Hostname();
-  static pid_t GetTID();
+  static pthread_t GetTID();
 
 private:
   std::string os_;
   std::string host_name_;
-  //pid_t tid_;
+  //pthread_t tid_;
 }; // class SystemInfo
 
 /*! 

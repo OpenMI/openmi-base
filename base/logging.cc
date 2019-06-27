@@ -345,11 +345,11 @@ std::string SystemInfo::OsName() {
  */
 std::string SystemInfo::Hostname() {
   if (host_name_.empty()) {
-    printf("host_name_ is empty. get from system\n");
-    char hostname[32];
+    const int length = 128;
+    char hostname[length];
     if (gethostname(hostname,sizeof(hostname)) != 0) {
-      std::runtime_error("get host name error.");
-      return NULL;
+      printf("[%s:%d] get hostname failed.\n", ConstShortFileName(__FILE__), __LINE__);
+      hostname[length - 1] = '\0';
     }
     std::string host_name(hostname);
     //host_name.pop_back();  // drop '\n' in hostname
@@ -359,8 +359,8 @@ std::string SystemInfo::Hostname() {
   return host_name_;
 }
 
-pid_t SystemInfo::GetTID() {
-  pid_t tid_ = 0;
+inline pthread_t SystemInfo::GetTID() {
+  pthread_t tid_ = 0;
   /*
   if (tid_ != 0) {
     return tid_;
@@ -401,7 +401,7 @@ pid_t SystemInfo::GetTID() {
   return tid_;
 #else
   // If none of the techniques above worked, we use pthread_self().
-  tid_ = (pid_t)(uintptr_t)pthread_self();
+  tid_ = (pthread_t)(uintptr_t)pthread_self();
   return tid_;
 #endif
 }

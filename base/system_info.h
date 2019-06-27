@@ -9,6 +9,7 @@
 #include <stdlib.h> // popen, pclose
 #include <stdio.h>  // fread,
 #include <string>
+#include <string.h>     // strrchr
 #include <unistd.h>
 #include <thread>
 
@@ -23,7 +24,7 @@ public:
   
   std::string OsName();
   std::string Hostname();
-  static pid_t GetTID();
+  static pthread_t GetTID();
 
 private:
   std::string os_;
@@ -41,16 +42,22 @@ inline std::string SystemInfo::OsName() {
   return os_name; 
 }
 
+inline const char* ConstShortFileName(const char* filepath) {
+  // only unix-like os 
+  const char* basename = strrchr(filepath, '/'); 
+  return basename ? (basename+1) : filepath;
+}
+
 /*!
  * Hostname
  */
 inline std::string SystemInfo::Hostname() {
   if (host_name_.empty()) {
-    printf("host_name_ is empty. get from system\n");
-    char hostname[32];
+    const int length = 128;
+    char hostname[length];
     if (gethostname(hostname,sizeof(hostname)) != 0) {
-      std::runtime_error("get host name error.");
-      return NULL;
+      printf("[%s:%d] get hostname failed.\n", ConstShortFileName(__FILE__), __LINE__);
+      hostname[length - 1] = '\0';
     }
     std::string host_name(hostname);
     //host_name.pop_back();  // drop '\n' in hostname
@@ -60,8 +67,8 @@ inline std::string SystemInfo::Hostname() {
   return host_name_;
 }
 
-pid_t SystemInfo::GetTID() {
-  pid_t tid_ = 0;
+pthread_t SystemInfo::GetTID() {
+  pthread_t tid_ = 0;
   /*
   if (tid_ != 0) {
     return tid_;
@@ -102,7 +109,7 @@ pid_t SystemInfo::GetTID() {
   return tid_;
 #else
   // If none of the techniques above worked, we use pthread_self().
-  tid_ = (pid_t)(uintptr_t)pthread_self();
+  tid_ = (pthread_t)(uintptr_t)pthread_self();
   return tid_;
 #endif
 }
