@@ -416,10 +416,14 @@ LogFile::LogFile(const char* base_filename,
   base_filename_(base_filename), 
   bin_name_(bin_name),
   roll_size_(roll_size), 
+  thread_safe_(thread_safe),
   log_severity_(log_severity), 
   start_of_period_(0), 
   last_roll_(0), 
-  last_flush_(0) {
+  last_flush_(0),
+  flush_interval_(flush_interval),
+  check_every_n_(check_every_n),
+  count_(0) {
     symlink_name_ = bin_name_ + "." + log_severity_;
     first_link_ = true;
 
