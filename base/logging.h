@@ -24,6 +24,7 @@ namespace internal {
 }
 
 extern void InitLogging(const char* name);
+extern void InitLogging(const char* argv0, const char* log_dir);
 extern void ShutdownLogging();
 
 //static openmi::ThreadLocal<internal::DateInfo> g_date;

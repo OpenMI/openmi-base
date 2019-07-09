@@ -67,7 +67,7 @@ inline std::string SystemInfo::Hostname() {
   return host_name_;
 }
 
-pthread_t SystemInfo::GetTID() {
+inline pthread_t SystemInfo::GetTID() {
   pthread_t tid_ = 0;
   /*
   if (tid_ != 0) {

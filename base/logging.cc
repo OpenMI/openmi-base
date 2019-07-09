@@ -624,6 +624,14 @@ void InitLogging(const char* argv0) {
   g_program_invocation_short_name = g_program_name;
 }
 
+void InitLogging(const char* argv0, const char* log_dir) {
+  InitLogging(argv0);
+  if (log_dir != nullptr) {
+    g_log_dir = log_dir;
+    printf("[%s:%d] g_log_dir: %s\n", ConstShortFileName(__FILE__), __LINE__, g_log_dir.c_str());
+  }
+}
+
 void ShutdownLogging() {
   LogDestination::DeleteLogDestinations();
   if (g_date != nullptr) {
