@@ -1,6 +1,7 @@
 #include <stdlib.h>               // posix_memalign 
 #include "allocator.h"
 #include "allocator_registry.h"
+using namespace openmi;
 
 namespace openmi {
 
@@ -41,7 +42,12 @@ public:
 REGISTER_ALLOCATOR(CPUAllocator, DefaultCPUAllocator);
 
 Allocator* cpu_allocator(std::string cpu_alloc_name) {
-  return openmi::Register<openmi::AllocatorRegistry>::Find(cpu_alloc_name)->func();
+  const AllocatorRegistry* allocator_registry = Register<AllocatorRegistry>::Find(cpu_alloc_name);
+  if (allocator_registry == nullptr) {
+    LOG(ERROR) << "allocator not exists. alloc name:" << cpu_alloc_name;
+    return nullptr;
+  }
+  return allocator_registry->func();
 }
 
 //OPENMI_REGISTER_FILE_TAG(cpu_allocator);

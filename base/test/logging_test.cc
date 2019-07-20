@@ -4,7 +4,7 @@
 
 using namespace openmi;
 
-static int N = 10;
+//static int N = 10;
 static int NN = 10000*10000;
 
 const char* msg = "openmi logging";

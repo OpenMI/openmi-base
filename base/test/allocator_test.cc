@@ -8,7 +8,7 @@ using namespace openmi;
 
 static int epoch = 1;
 static int N = 1000000;
-static int num_thread = 5;
+//static int num_thread = 5;
 
 void default_malloc() {
   for (int i = 0; i < epoch * N; ++i) {
@@ -34,7 +34,7 @@ void custom_malloc() {
 
 int main(int argc, char** argv) {
   openmi::Timer timer;
-  void* ptr = cpu_alloc->AllocateRaw(1000);
+  //void* ptr = cpu_alloc->AllocateRaw(1000);
   printf("done\n");
   default_malloc();
   printf("default_malloc: %d\n", timer.Elapsed());

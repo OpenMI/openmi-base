@@ -47,7 +47,7 @@ private:
   std::mutex mutex_;
   std::thread thread_; // used for consume log  
   std::string* value1;
-  std::string* value2;
+  //std::string* value2;
 }; // class AsyncThread
 
 int main(int argc, char** argv) {

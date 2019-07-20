@@ -10,9 +10,7 @@ class AllocatorRegistry : public openmi::FunctionRegisterBase<AllocatorRegistry,
 
 #define REGISTER_ALLOCATOR(allocator, name) \
   OPENMI_REGISTER_OBJECT_HELPER(::openmi::AllocatorRegistry, AllocatorRegistry, allocator, name) \
-  .SetFunction([]() { \
-    printf("[%s:%d] register allocator '%s'\n", __FILE__, __LINE__, #name); \
-    return new allocator(); })
+  .SetFunction([]() { return new allocator(); })
 
 //DLOG(INFO) << "device_name: " << #name;
   
