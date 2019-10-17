@@ -32,6 +32,10 @@ public:
    */
   template<typename PbType>
   static int LoadObjectFromPbFile(const char* file, PbType* obj) {
+    if (file == nullptr) {
+      LOG(ERROR) << "'file' is null"; 
+      return -1;
+    }
     int file_fd = open(file, O_RDONLY);
     if (file_fd < 0) {
       LOG(ERROR) << "open pb file failed. file_name: " << file;
@@ -52,6 +56,10 @@ public:
    */
   template<typename PbType>
   static int ParsePbFromString(const std::string& buffer, PbType* obj) {
+    if (obj == nullptr) {
+      LOG(ERROR) << "proto obj is null";
+      return -1;
+    }
     if (!google::protobuf::TextFormat::ParseFromString(buffer, obj)) {
       LOG(ERROR) << "parse pb from string failed. buffer: " << buffer;
       return -1;
@@ -64,6 +72,10 @@ public:
    */
   template <typename PbType>
   static int SerializeToString(PbType* obj, std::string& serialized_string) {
+    if (obj == nullptr) {
+      LOG(ERROR) << "proto obj is null";
+      return -1;
+    }
     if (! obj->SerializeToString(&serialized_string)) {
       LOG(ERROR) << "serialize to string from protobuf obj failed. pb:" << obj->DebugString();
       return -1;
@@ -76,6 +88,10 @@ public:
    */
   template <typename PbType>
   static int ParseFromString(const std::string& serialized_buffer, PbType* obj) {
+    if (obj == nullptr) {
+      LOG(ERROR) << "proto obj is null";
+      return -1;
+    }
     if (! obj->ParseFromString(serialized_buffer)) {
       LOG(ERROR) << "parse from serialized string failed."; 
       return -1;
@@ -85,6 +101,10 @@ public:
 
   template <typename PbType>
   static int SerializeToOstream(const char* file_path, PbType* obj) {
+    if (obj == nullptr) {
+      LOG(ERROR) << "proto obj is null";
+      return -1;
+    }
     fstream ofs(file_path, ios::out|ios::trunc|ios::binary);
     bool result = obj->SerializeToOstream(&ofs);
     ofs.close();
@@ -99,6 +119,10 @@ public:
 
   template <typename PbType>
   static int ParseFromIstream(const char* file_path, PbType* obj) {
+    if (obj == nullptr) {
+      LOG(ERROR) << "proto obj is null";
+      return -1;
+    }
     fstream ifs(file_path, ios::in|ios::binary);
     bool result = obj->ParseFromIstream(&ifs);
     ifs.close();

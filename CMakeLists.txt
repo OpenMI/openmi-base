@@ -19,12 +19,15 @@ include_directories(
   $ENV{DEPS_ENV_HOME}/include  
   ${PROJECT_SOURCE_DIR}
   ${PROJECT_SOURCE_DIR}/base
+  ${PROJECT_SOURCE_DIR}/../openmi-idl
 )
 
 link_directories(
   $ENV{DEPS_ENV_HOME}/lib 
+  ${PROJECT_SOURCE_DIR}/../openmi-idl/lib
   ${PROJECT_SOURCE_DIR}/lib
 )
+
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
   link_directories($ENV{DEPS_ENV_HOME}/lib64)
 endif()
@@ -32,8 +35,14 @@ endif()
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib) 
 
+#set(dep_static_libraries "")
+#set(STATIC_LINKER_FLAGS "-Wl,-Bstatic ${dep_static_libraries}")
+#set(dep_dynamic_libraries "")
+#set(SHARED_LINKER_FLAGS "-Wl,-Bdynamic ${dep_dynamic_libraries}")
+#set(summary_linker_flags "${STATIC_LINKER_FLAGS} ${SHARED_LINKER_FLAGS}") 
+set(summary_linker_flags "")
+
 aux_source_directory(base srcs_base)
-#aux_source_directory(base_logging srcs_base)
 set(srcs ${srcs_base})
 
 set(libname openmi_base)

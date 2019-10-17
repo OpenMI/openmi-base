@@ -25,8 +25,9 @@ static const char* g_program_invocation_short_name = NULL;
 
 const char* log_severity_names[NUM_SEVERITIES] = {"TRACE","DEBUG","INFO","WARN","ERROR","FATAL"};
 const char severity_tags[NUM_SEVERITIES] = {'T','D','I','W','E','F'}; 
-
 const char* g_log_file_severity_names[LOG_FILE_SEVERITIES] = {"INFO", "WARN", "ERROR"};
+
+static int m[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 static void WriteToStderr(const char* message, size_t len, LogSeverity severity = INFO) {
   fwrite(message, len, 1, stderr);
@@ -260,25 +261,13 @@ void Date::HumanDate(DateInfo& date) {
   sec = sec + 3600*BJTIME;
   date.usecond = tv.tv_usec;
 
-  if (sec % DAY == 0 || date.year == 0) {
-    printf("sec // DAY: %d, date.year: %d\n", sec % DAY, date.year);
-    ComputeYearMonthDay(sec, date);
-  }
-
-  if (sec % 3600 == 0 || date.hour == -1) {
-    ComputeHour(sec, date);
-  }
-
-  if (sec % 60 == 0 || date.minute == -1) {
-    ComputeMinute(sec, date);
-  }
-
+  ComputeYearMonthDay(sec, date);
+  ComputeHour(sec, date);
+  ComputeMinute(sec, date);
   ComputeSecond(sec, date);
 }
 
 void Date::ComputeYearMonthDay(int sec, DateInfo& date) {
-  printf("ComputeYearMonthDay\n");
-  int m[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   int ad = sec / DAY;
   ad = ad - YEARSTART;
   
