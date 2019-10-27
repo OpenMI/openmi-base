@@ -17,7 +17,7 @@ namespace openmi {
  */
 class ThreadPool {
 public:
-  ThreadPool() {}
+  ThreadPool(): num_thread_(0) {}
 
   ~ThreadPool(); 
 
@@ -30,6 +30,8 @@ public:
   }
 
   void Init(size_t num_thread);
+
+  int NumThread() { return num_thread_; }
 
   /*! 
    * \brief add task event
@@ -44,6 +46,7 @@ public:
   void Stop();
 
 private:
+  int num_thread_;
   std::vector<std::thread> worker_threads_;
   openmi::BlockingQueue<std::function<void()> > ready_tasks_; 
 
@@ -54,6 +57,7 @@ private:
 }; // class ThreadPool
 
 inline void ThreadPool::Init(size_t num_thread) {
+  num_thread_ = num_thread;
   stop_ = false;
   for (size_t i = 0; i < num_thread; ++i) {
     worker_threads_.emplace_back([this] {

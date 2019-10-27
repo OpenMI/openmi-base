@@ -1,6 +1,8 @@
 #include "../thread_local.h"
 #include <thread>
 #include <functional>
+#include <string>
+#include <unordered_map>
 #include <iostream>
 
 void foo(int value) {
@@ -44,6 +46,22 @@ int main() {
   t3.join();
   t4.join();
   t5.join();
+
+  openmi::ThreadLocal<std::unordered_map<std::string, std::string>*> map;
+  // map.Value() = nullptr;
+  if (map.Value() == nullptr) {
+    std::cout << "map is nullptr. new it." << std::endl;
+    map.Value() = new std::unordered_map<std::string, std::string>();
+  }
+  std::string k("1");
+  std::string v("111");
+  map.Value()->insert({k, v});
+  map.Value()->insert({v, k});
+
+  std::cout << "map size: " <<  map.Value()->size() << std::endl;
+  map.Value()->erase(k);
+  std::cout << "after erase. map size: " <<  map.Value()->size() << std::endl;
+  std::cout << "map: " << map.Value()->at(v) << std::endl;
 
   return 0;
 }
