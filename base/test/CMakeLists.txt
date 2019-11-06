@@ -16,6 +16,7 @@ endfunction()
 
 add_program("allocator_test")
 add_program("logging_test")
+add_program("random_test")
 add_program("sarray_test")
 add_program("timer_test")
 add_program("errors_test")
