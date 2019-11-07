@@ -39,6 +39,11 @@ static bool access_dir(const char* path) {
   return access(path, 0) == 0;
 }
 
+static bool access_file(const char* file_path) {
+  if (!file_path) return false;
+  return access(file_path, F_OK) == 0;
+}
+
 /*! \brief mdkir a dir. success: 0 */
 static bool mk_dir(const char* path) {
   if (!path) return false;
@@ -459,7 +464,17 @@ void LogFile::Write(const char* msg, size_t size) {
 
 void LogFile::WriteUnlocked(const char* msg, size_t size) {
   file_->write(msg, static_cast<int>(size));
-  if (file_->written_bytes() > roll_size_) {
+  
+  // check if the target log file exists per 2 second
+  bool is_rolled = false;
+  if (g_date->Value().second % 2 == 0) {
+    if (!access_file(cur_log_fullname_.c_str())) {
+      RollFile();
+      is_rolled = true;
+    }
+  }
+
+  if (file_->written_bytes() > roll_size_ && !is_rolled) {
     RollFile();
   } else {
     count_++;
@@ -478,8 +493,10 @@ void LogFile::WriteUnlocked(const char* msg, size_t size) {
 }
 
 bool LogFile::RollFile() {
-  time_t now = 0;
-  std::string cur_log_filename = PrettyLogFileName(&now);
+  time_t now = time(NULL);
+  struct tm tm;
+  gmtime_r(&now, &tm);
+  std::string cur_log_filename = PrettyLogFileName();
   time_t start = now / roll_per_seconds * roll_per_seconds;
     
   if (now > last_roll_) {
@@ -488,8 +505,8 @@ bool LogFile::RollFile() {
     start_of_period_ = start;
     printf("roll file reset. current log file name: %s\n", cur_log_filename.c_str());
 
-    std::string cur_log_fullname = base_filename_ + "/" + cur_log_filename;
-    file_.reset(new WriteOp(cur_log_fullname.c_str(), false, true)); 
+    cur_log_fullname_ = base_filename_ + "/" + cur_log_filename;
+    file_.reset(new WriteOp(cur_log_fullname_.c_str(), false, true)); 
 
     // file head info 
     char line[41];
@@ -505,7 +522,7 @@ bool LogFile::RollFile() {
     std::string machine = SystemInfo::Instance().Hostname();
     file_->write(machine.c_str(), machine.size(), true);
 
-    const char* line3 = "Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg";
+    const char* line3 = "Log line format: [I|W|E|F]mmdd hh:mm:ss.uuuuuu threadid file:line] msg";
     file_->write(line3, strlen(line3), true);
     
     std::string unlinked_fullname = base_filename_ + "/" + symlink_name_;
@@ -518,23 +535,24 @@ bool LogFile::RollFile() {
     } 
     if (first_link_) first_link_ = false;
     current_filename_ = cur_log_filename;
+    
     return true;
   }
   return false; 
 }
 
 // pretty log file name
-std::string LogFile::PrettyLogFileName(time_t* now) {
+std::string LogFile::PrettyLogFileName() {
   std::string cur_filename = bin_name_ + "." + SystemInfo::Instance().Hostname() + ".log." + log_severity_;
   // TODO username 
 
-  char timebuf[32];
-  struct tm tm;
-  *now = time(NULL);
-  gmtime_r(now, &tm);
-  strftime(timebuf, sizeof(timebuf), ".%Y%m%d-%H%M%S", &tm);
+  openmi::internal::DateInfo d = g_date->Value();
+  internal::Date::HumanDate(d);
+  char pretty_date[20];
+  snprintf(pretty_date, sizeof(pretty_date), ".%04d%02d%02d-%02d%02d%02d", 
+           d.year, d.month, d.day, d.hour, d.minute, d.second);
 
-  cur_filename += timebuf;
+  cur_filename += pretty_date;  
 
   return cur_filename;
 }

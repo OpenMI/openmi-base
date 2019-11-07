@@ -5,7 +5,8 @@
 using namespace openmi;
 
 //static int N = 10;
-static int NN = 10000*10000;
+static int NN = 10000;
+//static int NN = 1000;
 
 const char* msg = "openmi logging";
 
@@ -31,8 +32,9 @@ void init_logging(char** argv) {
 void logging_bench() {
   for (int i = 0; i < NN; ++i) {
     LOG(INFO) << msg;
-    LOG(WARN) << msg;
-    LOG(ERROR) << msg;
+    //LOG(WARN) << msg;
+    //LOG(ERROR) << msg;
+    //sleep(1);
   }
 }
 
@@ -56,7 +58,8 @@ void multi_thread_logging(char** argv) {
 
   ShutdownLogging();
   int end_time = timer.Elapsed();
-  printf("[%d] time:[%d] speed:%f\n", 3*NN, end_time, 3*NN*1.0 / (end_time*1.0 / 1e6));
+  int thread_num = 5;
+  printf("[%d] time:[%d] speed:%f\n", thread_num * NN, end_time, thread_num * NN * 1.0 / (end_time*1.0 / 1e6));
 }
 
 // custom send method 
@@ -83,9 +86,9 @@ void check_binary_op() {
 } 
 
 int main(int argc, char** argv) {
-  default_logging();
+  //default_logging();
   //init_logging(argv);
-  //multi_thread_logging(argv);
+  multi_thread_logging(argv);
   //custom_send_method(argv); 
   //check_binary_op();
   return 0;

@@ -15,6 +15,7 @@ function (add_program arg)
 endfunction()
 
 add_program("allocator_test")
+add_program("file_exist_test")
 add_program("logging_test")
 add_program("random_test")
 add_program("sarray_test")

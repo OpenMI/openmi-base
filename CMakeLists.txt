@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.4)
 
 project(openmi-base)
 
-set(CMAKE_VERBOSE_MAKEFILE on)
+set(CMAKE_VERBOSE_MAKEFILE off)  # on/off
 
 #SET(CMAKE_BUILD_TYPE "Release")
 

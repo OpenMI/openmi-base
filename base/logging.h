@@ -418,7 +418,7 @@ public:
   bool RollFile();
 
 private:
-  std::string PrettyLogFileName(time_t* now);
+  std::string PrettyLogFileName();
 
 private:
   std::string base_filename_;
@@ -434,6 +434,7 @@ private:
   int dir_fd_;
   std::string symlink_name_;
   std::string current_filename_;
+  std::string cur_log_fullname_;  // base_filename_ + current_filename_
   bool first_link_;
   int flush_interval_;
   int check_every_n_;
